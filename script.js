@@ -1,3 +1,46 @@
+// Auto-hide address bar and navigation buttons on mobile
+window.addEventListener('load', function() {
+    // Scroll to hide address bar
+    setTimeout(function() {
+        window.scrollTo(0, 1);
+    }, 0);
+    
+    // Request fullscreen on first user interaction
+    let hasInteracted = false;
+    const requestFullscreen = function() {
+        if (hasInteracted) return;
+        hasInteracted = true;
+        
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen().catch(err => {
+                console.log('Fullscreen request failed:', err);
+            });
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        }
+    };
+    
+    // Trigger on first touch or click
+    document.addEventListener('touchstart', requestFullscreen, { once: true });
+    document.addEventListener('click', requestFullscreen, { once: true });
+});
+
+// Keep address bar hidden on scroll
+let lastScrollTop = 0;
+window.addEventListener('scroll', function() {
+    const st = window.pageYOffset || document.documentElement.scrollTop;
+    if (st > lastScrollTop) {
+        // Scrolling down - hide address bar
+        window.scrollTo(0, 1);
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
+}, false);
+
 // Text transition on scroll gesture (without viewport movement)
 let scrollProgress = 0;
 let targetProgress = 0; // Target progress for smooth snapping

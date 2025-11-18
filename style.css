@@ -25,6 +25,27 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Fullscreen mode styles */
+body:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+}
+
+body:-moz-full-screen {
+    width: 100%;
+    height: 100%;
+}
+
+body:-ms-fullscreen {
+    width: 100%;
+    height: 100%;
+}
+
+body:fullscreen {
+    width: 100%;
+    height: 100%;
+}
+
 /* Section styling */
 .section {
     width: 100%;
