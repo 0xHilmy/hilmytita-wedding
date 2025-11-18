@@ -242,7 +242,7 @@ body {
 }
 
 /* Responsive adjustments for smaller mobile devices */
-@media (max-width: 375px) {
+@media (max-width: 10px) {
     .text-line {
         font-size: 40px;
     }
