@@ -644,7 +644,7 @@ body:fullscreen {
 
 .quote-text {
     font-family: 'Playfair Display', serif;
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 400;
     color: #1a4a6b;
     line-height: 1.8;
@@ -1060,7 +1060,7 @@ body:fullscreen {
 
 .event-location {
     font-family: 'Playfair Display', serif;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 400;
     color: #ffffff;
     line-height: 1.5;
@@ -1098,7 +1098,7 @@ body:fullscreen {
 
 .event-button-wrapper {
     position: absolute;
-    bottom: 50px;
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
@@ -1669,7 +1669,7 @@ ection 8: Invitation */
 
 .invitation-text {
     font-family: 'Playfair Display', serif;
-    font-size: 22px;
+    font-size: 14px;
     font-weight: 400;
     color: #5a5a5a;
     line-height: 1.9;
