@@ -320,7 +320,7 @@ body {
 }
 
 /* Responsive adjustments for larger mobile devices */
-@media (min-width: 768px) {
+@media (min-width: 1068px) {
     .text-line {
         font-size: 64px;
     }
