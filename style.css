@@ -242,7 +242,7 @@ body {
 }
 
 /* Responsive adjustments for smaller mobile devices */
-@media (max-width: 10px) {
+@media (max-width: 275px) {
     .text-line {
         font-size: 40px;
     }
@@ -504,7 +504,7 @@ body {
 }
 
 /* Responsive for Section 2 */
-@media (max-width: 375px) {
+@media (max-width: 275px) {
     .section-2-title {
         font-size: 18px;
         margin-bottom: 20px;
@@ -632,7 +632,7 @@ body {
 }
 
 /* Responsive for Section 2 Quote */
-@media (max-width: 375px) {
+@media (max-width: 275px) {
     .quote-text-wrapper {
         padding: 30px 15px 15px 15px;
     }
@@ -859,7 +859,7 @@ body {
 }
 
 /* Responsive for Section 3 & 4 */
-@media (max-width: 375px) {
+@media (max-width: 275px) {
 
     .bride-content,
     .groom-content {
@@ -1121,7 +1121,7 @@ body {
 }
 
 /* Responsive for Section 5 & 6 */
-@media (max-width: 375px) {
+@media (max-width: 275px) {
     .event-content {
         top: 40px;
         width: 95%;
@@ -1582,7 +1582,7 @@ ection 8: Invitation */
 }
 
 /* Responsive for Section 8 */
-@media (max-width: 375px) {
+@media (max-width: 275px) {
     .invitation-content {
         width: 90%;
         padding: 0 15px;
@@ -1725,7 +1725,7 @@ media (min-width: 768px) {
 }
 
 /* Responsive for Section 9 */
-@media (max-width: 375px) {
+@media (max-width: 275px) {
     .gifts-title {
         font-size: 42px;
         margin-bottom: 40px;
