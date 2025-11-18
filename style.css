@@ -4,15 +4,25 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
 body {
     font-family: 'Dancing Script', cursive;
     background-color: #78A8D7;
     min-height: 100vh;
+    min-height: -webkit-fill-available;
     max-height: 100vh;
     overflow: hidden;
     position: fixed;
     width: 100%;
     scroll-behavior: smooth;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Section styling */
@@ -1422,7 +1432,73 @@ ction 7: Our Story */
 }
 
 /* Responsive for Section 7 */
-@media (max-width: 768px) {
+@media (max-width: 400px) {
+    .story-container {
+        padding: 30px 10px 50px 10px;
+    }
+
+    .story-main-title {
+        font-size: 36px;
+        margin-bottom: 25px;
+    }
+
+    .timeline {
+        padding: 10px 0;
+    }
+
+    .timeline-line {
+        left: 32px;
+    }
+
+    .timeline-item {
+        margin-bottom: 35px;
+    }
+
+    .timeline-item::before {
+        left: 30px;
+        bottom: -35px;
+        width: 3px;
+    }
+
+    .timeline-item-left .timeline-content,
+    .timeline-item-right .timeline-content {
+        padding-left: 80px;
+        padding-right: 8px;
+    }
+
+    .timeline-image {
+        left: 32px;
+        width: 75px;
+        height: 75px;
+        border-width: 3px;
+    }
+
+    .timeline-placeholder {
+        font-size: 17px;
+    }
+
+    .timeline-text {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .timeline-title {
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .timeline-year {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .timeline-description {
+        font-size: 12px;
+        line-height: 1.45;
+    }
+}
+
+@media (min-width: 401px) and (max-width: 768px) {
     .story-container {
         padding: 60px 15px;
     }
