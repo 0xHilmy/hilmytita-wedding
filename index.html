@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hari Bahagia Kami</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+    <!-- Background Music -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="assets/Sesaat Kau Hadir - Utha Likumahuwa ( cover by TAF Entertainment ).mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Section 1: Main Page -->
+    <section class="section section-1">
+        <div class="container">
+            <!-- Background date numbers -->
+            <div class="date-background">
+                <span class="date-number">28</span>
+                <span class="date-number">11</span>
+                <span class="date-number">25</span>
+            </div>
+
+            <!-- Main text Section 1 -->
+            <div class="main-text text-content text-content-1">
+                <h1 class="text-line">Hari</h1>
+                <h1 class="text-line">Bahagia</h1>
+                <h1 class="text-line">Kami</h1>
+            </div>
+
+            <!-- Main text Section 2 (overlay) -->
+            <div class="main-text text-content text-content-2">
+                <h2 class="section-2-title">Pernikahan</h2>
+                <div class="section-2-names">
+                    <h1 class="name-line">Hilmy</h1>
+                    <h1 class="name-line name-line-amp">& Tita</h1>
+                </div>
+                <p class="section-2-date">28 November 2025</p>
+            </div>
+
+            <!-- Flower decorations -->
+            <!-- Pojok kiri atas -->
+            <div class="flower pojok-kiri-atas-1">
+                <img src="assets/pojok kiri atas 1.png" alt="Flower decoration">
+            </div>
+            <div class="flower pojok-kiri-atas-2">
+                <img src="assets/pojok kiri atas 2.png" alt="Flower decoration">
+            </div>
+
+            <!-- Pojok kanan atas -->
+            <div class="flower pojok-kanan-atas-1">
+                <img src="assets/pojok kanan atas 1.png" alt="Flower decoration">
+            </div>
+            <div class="flower pojok-kanan-atas-2">
+                <img src="assets/pojok kanan atas 2.png" alt="Flower decoration">
+            </div>
+
+            <!-- Atas tengah -->
+            <div class="flower atas-tengah">
+                <img src="assets/atas tengah.png" alt="Flower decoration">
+            </div>
+
+            <!-- Kiri tengah -->
+            <div class="flower kiri-tengah">
+                <img src="assets/kiri tangah.png" alt="Flower decoration">
+            </div>
+
+            <!-- Kiri dibawah tengah -->
+            <div class="flower kiri-dibawah-tengah">
+                <img src="assets/kiri dibawah tengah .png" alt="Flower decoration">
+            </div>
+
+            <!-- Kanan tengah -->
+            <div class="flower kanan-tengah">
+                <img src="assets/kanan tengah.png" alt="Flower decoration">
+            </div>
+
+            <!-- Kanan dibawah tengah -->
+            <div class="flower kanan-dibawah-tengah">
+                <img src="assets/kanan dibawah tengah.png" alt="Flower decoration">
+            </div>
+
+            <!-- Bawah kiri -->
+            <div class="flower bawah-kiri">
+                <img src="assets/bawah kiri .png" alt="Flower decoration">
+            </div>
+
+            <!-- Bawah tengah -->
+            <div class="flower bawah-tengah">
+                <img src="assets/bawah tengah.png" alt="Flower decoration">
+            </div>
+
+            <!-- Bawah kanan -->
+            <div class="flower bawah-kanan">
+                <img src="assets/bawah kanan.png" alt="Flower decoration">
+            </div>
+
+            <!-- Pojok kiri bawah -->
+            <div class="flower pojok-kiri-bawah">
+                <img src="assets/pojok kiri bawah.png" alt="Flower decoration">
+            </div>
+
+            <!-- Pojok kanan bawah -->
+            <div class="flower pojok-kanan-bawah">
+                <img src="assets/pojok kanan bawah.png" alt="Flower decoration">
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Quote with Image (overlay) -->
+    <div class="section-2-quote-overlay">
+        <div class="quote-text-wrapper">
+            <p class="quote-text">"Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan
+                untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di
+                antaramu rasa kasih dan sayang."</p>
+            <p class="quote-citation">QS. Ar-Rum: 21</p>
+        </div>
+        <div class="quote-image-wrapper">
+            <img src="assets/brideandgroom.png" alt="Hilmy & Tita" class="quote-image">
+        </div>
+    </div>
+
+    <!-- Section 3: Perkenalan Mempelai Wanita -->
+    <div class="section-3-bride-overlay">
+        <div class="bride-background">
+            <img src="assets/wanita.png" alt="Tita Maheswara" class="bride-bg-image">
+        </div>
+        <div class="bride-overlay-gradient"></div>
+        <div class="bride-content">
+            <h2 class="bride-label">Mempelai Wanita</h2>
+            <h3 class="bride-name">Tita Maheswara</h3>
+            <p class="bride-description">Putri dari Alm Bpk. Sugito dan Ibu. Dewi Fajarwati</p>
+        </div>
+    </div>
+
+    <!-- Section 4: Perkenalan Mempelai Pria -->
+    <div class="section-4-groom-overlay">
+        <div class="groom-background">
+            <img src="assets/priabaru.png" alt="Rizqi Faishal Hilmy" class="groom-bg-image">
+        </div>
+        <div class="groom-overlay-gradient"></div>
+        <div class="groom-content">
+            <h2 class="groom-label">Mempelai Pria</h2>
+            <h3 class="groom-name">Rizqi Faishal Hilmy</h3>
+            <p class="groom-description">Putra dari Bpk. Mustari Heru Jatmika dan Ibu. Nurul Aini Tamin</p>
+        </div>
+    </div>
+
+    <!-- Section 5: Acara Akad -->
+    <div class="section-5-akad-overlay">
+        <div class="event-background">
+            <img src="assets/bridegroom duduk.png" alt="Akad Nikah" class="event-bg-image">
+        </div>
+        <div class="event-overlay-gradient"></div>
+        <div class="event-content">
+            <h2 class="event-title">Akad Nikah</h2>
+            <div class="event-info">
+                <p class="event-date">Jumat, 28 November 2025</p>
+                <p class="event-time">09.00 WIB</p>
+                <p class="event-location">Kantor Kecamatan Pondok Aren<br>Jl. Graha Raya Bintaro No.1, Parigi
+                    Baru<br>Kec. Pd. Aren, Kota Tangerang Selatan<br>Banten 15228</p>
+            </div>
+        </div>
+        <div class="event-button-wrapper">
+            <a href="https://www.google.com/maps?q=-6.274257086583583,106.69220286678616" target="_blank"
+                class="event-button">Lihat Lokasi</a>
+        </div>
+    </div>
+
+    <!-- Section 6: Acara Resepsi -->
+    <div class="section-6-resepsi-overlay">
+        <div class="event-background">
+            <img src="assets/bridegroom duduk.png" alt="Resepsi" class="event-bg-image">
+        </div>
+        <div class="event-overlay-gradient"></div>
+        <div class="event-content">
+            <h2 class="event-title">Resepsi</h2>
+            <div class="event-info">
+                <p class="event-date">Minggu, 30 November 2025</p>
+                <p class="event-time">10.00 WIB - 17.00 WIB</p>
+                <p class="event-location">Jl. Sdn Cipadu I No.12</p>
+            </div>
+        </div>
+
+        <div class="event-button-wrapper">
+            <a href="https://www.google.com/maps?q=-6.237496005663578,106.7351319519027" target="_blank"
+                class="event-button">Lihat Lokasi</a>
+        </div>
+    </div>
+
+    <!-- Section 8: Invitation -->
+    <div class="section-8-invitation-overlay">
+        <div class="invitation-background">
+            <img src="assets/bridegroom duduk.png" alt="Invitation" class="invitation-bg-image">
+        </div>
+        <div class="invitation-overlay-gradient"></div>
+        <div class="invitation-content">
+            <p class="invitation-text">Suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Sdra/i berkenan hadir dan memberikan doa restu untuk kedua mempelai</p>
+        </div>
+    </div>
+
+    <!-- Section 9: Gifts -->
+    <div class="section-9-gifts-overlay">
+        <div class="gifts-container">
+            <h2 class="gifts-title">Send Gifts</h2>
+            
+            <div class="gifts-info">
+                <p class="gifts-bank">BCA</p>
+                <p class="gifts-account">6042191261</p>
+                <p class="gifts-name">Tita Maheswara</p>
+            </div>
+
+            <!-- Flower decorations -->
+            <div class="flower pojok-kiri-atas-1">
+                <img src="assets/pojok kiri atas 1.png" alt="Flower decoration">
+            </div>
+            <div class="flower pojok-kiri-atas-2">
+                <img src="assets/pojok kiri atas 2.png" alt="Flower decoration">
+            </div>
+            <div class="flower pojok-kanan-atas-1">
+                <img src="assets/pojok kanan atas 1.png" alt="Flower decoration">
+            </div>
+            <div class="flower pojok-kanan-atas-2">
+                <img src="assets/pojok kanan atas 2.png" alt="Flower decoration">
+            </div>
+            <div class="flower atas-tengah">
+                <img src="assets/atas tengah.png" alt="Flower decoration">
+            </div>
+            <div class="flower kiri-tengah">
+                <img src="assets/kiri tangah.png" alt="Flower decoration">
+            </div>
+            <div class="flower kiri-dibawah-tengah">
+                <img src="assets/kiri dibawah tengah .png" alt="Flower decoration">
+            </div>
+            <div class="flower kanan-tengah">
+                <img src="assets/kanan tengah.png" alt="Flower decoration">
+            </div>
+            <div class="flower kanan-dibawah-tengah">
+                <img src="assets/kanan dibawah tengah.png" alt="Flower decoration">
+            </div>
+            <div class="flower bawah-kiri">
+                <img src="assets/bawah kiri .png" alt="Flower decoration">
+            </div>
+            <div class="flower bawah-tengah">
+                <img src="assets/bawah tengah.png" alt="Flower decoration">
+            </div>
+            <div class="flower bawah-kanan">
+                <img src="assets/bawah kanan.png" alt="Flower decoration">
+            </div>
+            <div class="flower pojok-kiri-bawah">
+                <img src="assets/pojok kiri bawah.png" alt="Flower decoration">
+            </div>
+            <div class="flower pojok-kanan-bawah">
+                <img src="assets/pojok kanan bawah.png" alt="Flower decoration">
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 7: Our Story -->
+    <div class="section-7-story-overlay">
+        <div class="story-container">
+            <h2 class="story-main-title">Our Story</h2>
+
+            <div class="timeline">
+                <!-- Timeline Line -->
+                <div class="timeline-line"></div>
+
+                <!-- Story 1: First Meeting -->
+                <div class="timeline-item timeline-item-left">
+                    <div class="timeline-content">
+                        <div class="timeline-image">
+                            <div class="timeline-placeholder">2014</div>
+                        </div>
+                        <div class="timeline-text">
+                            <h3 class="timeline-title">First Meeting</h3>
+                            <p class="timeline-year">2014</p>
+                            <p class="timeline-description">Pertemuan Pertama Kami pada bangku Sekolah Menengah Pertama
+                                di SMAN 108 Jakarta</p>
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <!-- Story 2: Perpisahan -->
+                <div class="timeline-item timeline-item-right">
+                    <div class="timeline-content">
+                        <div class="timeline-text">
+                            <h3 class="timeline-title">Perpisahan</h3>
+                            <p class="timeline-year">2017</p>
+                            <p class="timeline-description">Kami harus berpisah untuk melanjutkan studi di perguruan
+                                tinggi, Hilmy di UNY Jogja dan Tita di Poltekkes Kemenkes II Jakarta</p>
+                        </div>
+                        <div class="timeline-image">
+                            <div class="timeline-placeholder">2017</div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <!-- Story 3: Pertemuan Kembali -->
+                <div class="timeline-item timeline-item-left">
+                    <div class="timeline-content">
+                        <div class="timeline-image">
+                            <div class="timeline-placeholder">2023</div>
+                        </div>
+                        <div class="timeline-text">
+                            <h3 class="timeline-title">Pertemuan Kembali</h3>
+                            <p class="timeline-year">2023</p>
+                            <p class="timeline-description">Berawal dari komentar Tita di salah satu postingan Instagram
+                                Hilmy, Akhirnya kita Bertemu Kembali dan mulai dekat lagi</p>
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <!-- Story 4: Pernikahan -->
+                <div class="timeline-item timeline-item-right">
+                    <div class="timeline-content">
+                        <div class="timeline-text">
+                            <h3 class="timeline-title">Pernikahan</h3>
+                            <p class="timeline-year">2025</p>
+                            <p class="timeline-description">Setelah Perjalanan Panjang, Kisah Cinta Kami bermuara pada
+                                jenjang pernikahan</p>
+                        </div>
+                        <div class="timeline-image">
+                            <div class="timeline-placeholder">2025</div>
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
