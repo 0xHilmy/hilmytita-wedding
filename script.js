@@ -5,35 +5,67 @@ let musicInitialized = false;
 
 function initMusicControl() {
     if (musicInitialized) return;
-    
+
     musicToggle = document.getElementById('musicToggle');
     backgroundMusic = document.getElementById('backgroundMusic');
     playIcon = document.querySelector('.play-icon');
     pauseIcon = document.querySelector('.pause-icon');
-    
+
     if (!musicToggle || !backgroundMusic || !playIcon || !pauseIcon) {
         console.log('Music elements not found, retrying...');
         setTimeout(initMusicControl, 100);
         return;
     }
-    
+
     musicInitialized = true;
+
+    // Detect Android for special handling
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    console.log('Is Android:', isAndroid);
+
+    if (isAndroid) {
+        // Android-specific audio setup
+        backgroundMusic.setAttribute('preload', 'auto');
+        backgroundMusic.setAttribute('playsinline', '');
+        backgroundMusic.setAttribute('webkit-playsinline', '');
+    }
 
     // Function to play music
     function playMusic() {
+        // Load audio first for better Android compatibility
+        backgroundMusic.load();
+
+        // Set volume to ensure it's audible
+        backgroundMusic.volume = 0.7;
+
         const playPromise = backgroundMusic.play();
-        
+
         if (playPromise !== undefined) {
             playPromise.then(() => {
                 isPlaying = true;
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
-                console.log('Music playing');
+                console.log('Music playing successfully');
             }).catch(err => {
                 console.log('Error playing music:', err);
-                isPlaying = false;
-                playIcon.style.display = 'block';
-                pauseIcon.style.display = 'none';
+                console.log('Audio readyState:', backgroundMusic.readyState);
+                console.log('Audio networkState:', backgroundMusic.networkState);
+
+                // Try to load and play again after a short delay
+                setTimeout(() => {
+                    backgroundMusic.load();
+                    backgroundMusic.play().then(() => {
+                        isPlaying = true;
+                        playIcon.style.display = 'none';
+                        pauseIcon.style.display = 'block';
+                        console.log('Music playing on retry');
+                    }).catch(retryErr => {
+                        console.log('Retry failed:', retryErr);
+                        isPlaying = false;
+                        playIcon.style.display = 'block';
+                        pauseIcon.style.display = 'none';
+                    });
+                }, 500);
             });
         }
     }
@@ -48,27 +80,84 @@ function initMusicControl() {
     }
 
     // Toggle music on button click
-    musicToggle.addEventListener('click', function(e) {
+    musicToggle.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         console.log('Music button clicked, isPlaying:', isPlaying);
-        
+
         if (isPlaying) {
             pauseMusic();
         } else {
             playMusic();
         }
     });
-    
+
     // Also handle touch events separately for mobile
-    musicToggle.addEventListener('touchend', function(e) {
+    musicToggle.addEventListener('touchend', function (e) {
         e.preventDefault();
         e.stopPropagation();
     });
 
+    // Preload audio for better performance on Android
+    backgroundMusic.addEventListener('canplaythrough', function () {
+        console.log('Audio can play through');
+    });
+
+    backgroundMusic.addEventListener('loadeddata', function () {
+        console.log('Audio data loaded');
+    });
+
+    backgroundMusic.addEventListener('loadstart', function () {
+        console.log('Audio load started');
+    });
+
+    backgroundMusic.addEventListener('loadedmetadata', function () {
+        console.log('Audio metadata loaded');
+    });
+
+    backgroundMusic.addEventListener('error', function (e) {
+        console.log('Audio error:', e);
+        console.log('Audio error code:', backgroundMusic.error ? backgroundMusic.error.code : 'no error code');
+    });
+
+    // Try to preload the audio
+    backgroundMusic.load();
+
+    // Additional Android compatibility
+    if (isAndroid) {
+        // Force audio context creation on Android
+        backgroundMusic.addEventListener('loadedmetadata', function () {
+            console.log('Metadata loaded, duration:', backgroundMusic.duration);
+            if (backgroundMusic.duration && backgroundMusic.duration > 0) {
+                console.log('Audio file loaded successfully');
+            }
+        });
+    }
+
     // Expose playMusic function globally for scroll handler
-    window.playMusicOnScroll = playMusic;
-    
+    window.playMusicOnScroll = function () {
+        console.log('playMusicOnScroll called, isPlaying:', isPlaying);
+        console.log('Audio readyState:', backgroundMusic.readyState);
+        console.log('Audio networkState:', backgroundMusic.networkState);
+        console.log('Audio paused:', backgroundMusic.paused);
+        console.log('Audio currentTime:', backgroundMusic.currentTime);
+        console.log('Audio duration:', backgroundMusic.duration);
+
+        if (!isPlaying) {
+            // Force reload for Android compatibility
+            if (backgroundMusic.readyState < 2) {
+                console.log('Audio not ready, forcing load...');
+                backgroundMusic.load();
+                backgroundMusic.addEventListener('canplay', function () {
+                    console.log('Audio can play after load');
+                    playMusic();
+                }, { once: true });
+            } else {
+                playMusic();
+            }
+        }
+    };
+
     console.log('Music control initialized');
 }
 
@@ -80,18 +169,18 @@ if (document.readyState === 'loading') {
 }
 
 // Auto-hide address bar and navigation buttons on mobile
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     // Scroll to hide address bar
-    setTimeout(function() {
+    setTimeout(function () {
         window.scrollTo(0, 1);
     }, 0);
-    
+
     // Request fullscreen on first user interaction
     let hasInteracted = false;
-    const requestFullscreen = function() {
+    const requestFullscreen = function () {
         if (hasInteracted) return;
         hasInteracted = true;
-        
+
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
             elem.requestFullscreen().catch(err => {
@@ -105,7 +194,7 @@ window.addEventListener('load', function() {
             elem.msRequestFullscreen();
         }
     };
-    
+
     // Trigger on first touch or click
     document.addEventListener('touchstart', requestFullscreen, { once: true });
     document.addEventListener('click', requestFullscreen, { once: true });
@@ -113,7 +202,7 @@ window.addEventListener('load', function() {
 
 // Keep address bar hidden on scroll
 let lastScrollTop = 0;
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     const st = window.pageYOffset || document.documentElement.scrollTop;
     if (st > lastScrollTop) {
         // Scrolling down - hide address bar
@@ -151,15 +240,15 @@ let touchCurrentY = 0;
 
 function handleWheel(e) {
     e.preventDefault();
-    
+
     const delta = e.deltaY;
-    
+
     // Determine current checkpoint (snap to nearest)
     const checkpoints = [CHECKPOINTS.TEXT_CONTENT_1, CHECKPOINTS.TEXT_CONTENT_2, CHECKPOINTS.QUOTE_SECTION, CHECKPOINTS.BRIDE_SECTION, CHECKPOINTS.GROOM_SECTION, CHECKPOINTS.AKAD_SECTION, CHECKPOINTS.RESEPSI_SECTION, CHECKPOINTS.STORY_1, CHECKPOINTS.STORY_2, CHECKPOINTS.STORY_3, CHECKPOINTS.STORY_4, CHECKPOINTS.INVITATION_SECTION, CHECKPOINTS.GIFTS_SECTION];
-    const currentCheckpoint = checkpoints.reduce((prev, curr) => 
+    const currentCheckpoint = checkpoints.reduce((prev, curr) =>
         Math.abs(curr - scrollProgress) < Math.abs(prev - scrollProgress) ? curr : prev
     );
-    
+
     // Play music on first scroll (any direction from first page)
     if (!hasPlayedMusicOnScroll && currentCheckpoint === CHECKPOINTS.TEXT_CONTENT_1) {
         hasPlayedMusicOnScroll = true;
@@ -168,10 +257,10 @@ function handleWheel(e) {
             window.playMusicOnScroll();
         }
     }
-    
+
     // Determine next checkpoint based on current checkpoint and direction
     let nextCheckpoint = currentCheckpoint;
-    
+
     if (delta > 0) {
         // Scrolling down - move to next checkpoint
         if (currentCheckpoint === CHECKPOINTS.TEXT_CONTENT_1) {
@@ -233,7 +322,7 @@ function handleWheel(e) {
             nextCheckpoint = CHECKPOINTS.TEXT_CONTENT_1;
         }
     }
-    
+
     // Smooth transition to checkpoint
     targetProgress = nextCheckpoint;
     animateToTarget();
@@ -242,7 +331,7 @@ function handleWheel(e) {
 function animateToTarget() {
     const diff = targetProgress - scrollProgress;
     const step = diff * 0.15; // Smoothing factor
-    
+
     if (Math.abs(diff) > 0.01) {
         scrollProgress += step;
         updateTextTransition();
@@ -261,7 +350,7 @@ let hasPlayedMusicOnScroll = false; // Track if music has been played on scroll
 
 function handleTouchStart(e) {
     if (!e.touches || e.touches.length === 0) return;
-    
+
     touchStartY = e.touches[0].clientY;
     touchStartProgress = scrollProgress;
     isTouching = true;
@@ -270,34 +359,34 @@ function handleTouchStart(e) {
 
 function handleTouchMove(e) {
     if (!isTouching) return;
-    
+
     e.preventDefault();
-    
+
     if (!e.touches || e.touches.length === 0) return;
-    
+
     touchCurrentY = e.touches[0].clientY;
-    const delta = touchStartY - touchCurrentY; 
+    const delta = touchStartY - touchCurrentY;
     // delta > 0: finger moved up = scroll down (next checkpoint)
     // delta < 0: finger moved down = scroll up (previous checkpoint)
     const minScrollDistance = 50; // Minimum distance to trigger checkpoint change
-    
+
     // Check if we've scrolled enough to trigger checkpoint change
     if (Math.abs(delta) < minScrollDistance) {
         return; // Not enough movement yet
     }
-    
+
     // Determine direction
     const isScrollingDown = delta > 0;
-    
+
     // Determine current checkpoint (snap to nearest)
     const checkpoints = [CHECKPOINTS.TEXT_CONTENT_1, CHECKPOINTS.TEXT_CONTENT_2, CHECKPOINTS.QUOTE_SECTION, CHECKPOINTS.BRIDE_SECTION, CHECKPOINTS.GROOM_SECTION, CHECKPOINTS.AKAD_SECTION, CHECKPOINTS.RESEPSI_SECTION, CHECKPOINTS.STORY_1, CHECKPOINTS.STORY_2, CHECKPOINTS.STORY_3, CHECKPOINTS.STORY_4, CHECKPOINTS.INVITATION_SECTION, CHECKPOINTS.GIFTS_SECTION];
-    const currentCheckpoint = checkpoints.reduce((prev, curr) => 
+    const currentCheckpoint = checkpoints.reduce((prev, curr) =>
         Math.abs(curr - scrollProgress) < Math.abs(prev - scrollProgress) ? curr : prev
     );
-    
+
     // Determine next checkpoint based on current checkpoint and direction
     let nextCheckpoint = currentCheckpoint;
-    
+
     if (isScrollingDown) {
         // Scrolling down (swipe up) - move to next checkpoint
         if (currentCheckpoint === CHECKPOINTS.TEXT_CONTENT_1) {
@@ -357,13 +446,13 @@ function handleTouchMove(e) {
             nextCheckpoint = CHECKPOINTS.TEXT_CONTENT_1;
         }
     }
-    
+
     // Only trigger if checkpoint changed
     if (nextCheckpoint !== lastTouchCheckpoint) {
         lastTouchCheckpoint = nextCheckpoint;
         // Update touch start position to prevent multiple triggers
         touchStartY = touchCurrentY;
-        
+
         // Play music on first scroll (any direction from first page)
         if (!hasPlayedMusicOnScroll && currentCheckpoint === CHECKPOINTS.TEXT_CONTENT_1) {
             hasPlayedMusicOnScroll = true;
@@ -372,7 +461,7 @@ function handleTouchMove(e) {
                 window.playMusicOnScroll();
             }
         }
-        
+
         // Smooth transition to checkpoint
         targetProgress = nextCheckpoint;
         animateToTarget();
@@ -385,7 +474,7 @@ function handleTouchEnd() {
     isTouching = false;
     // Snap to nearest checkpoint
     const checkpoints = [CHECKPOINTS.TEXT_CONTENT_1, CHECKPOINTS.TEXT_CONTENT_2, CHECKPOINTS.QUOTE_SECTION, CHECKPOINTS.BRIDE_SECTION, CHECKPOINTS.GROOM_SECTION, CHECKPOINTS.AKAD_SECTION, CHECKPOINTS.RESEPSI_SECTION, CHECKPOINTS.STORY_1, CHECKPOINTS.STORY_2, CHECKPOINTS.STORY_3, CHECKPOINTS.STORY_4, CHECKPOINTS.INVITATION_SECTION, CHECKPOINTS.GIFTS_SECTION];
-    const nearestCheckpoint = checkpoints.reduce((prev, curr) => 
+    const nearestCheckpoint = checkpoints.reduce((prev, curr) =>
         Math.abs(curr - scrollProgress) < Math.abs(prev - scrollProgress) ? curr : prev
     );
     targetProgress = nearestCheckpoint;
@@ -405,9 +494,9 @@ function updateTextTransition() {
     const section7StoryOverlay = document.querySelector('.section-7-story-overlay');
     const section8InvitationOverlay = document.querySelector('.section-8-invitation-overlay');
     const section9GiftsOverlay = document.querySelector('.section-9-gifts-overlay');
-    
+
     if (!textContent1 || !textContent2) return;
-    
+
     // Phase 1: text-content-1 to text-content-2 (scrollProgress 0-1)
     if (scrollProgress <= 1) {
         // Hide all other sections
@@ -426,17 +515,17 @@ function updateTextTransition() {
             section4GroomOverlay.style.visibility = 'hidden';
             section4GroomOverlay.classList.remove('active');
         }
-        
+
         // Transition between text-content-1 and text-content-2
         if (scrollProgress <= 0.5) {
             const fadeOutProgress = Math.min(1, (scrollProgress / 0.5));
             textContent1.style.opacity = Math.max(0, 1 - fadeOutProgress);
             textContent1.style.transform = `translate(-50%, calc(-35% - ${fadeOutProgress * 20}px))`;
-            
+
             textContent2.style.opacity = 0;
             textContent2.style.transform = `translate(-50%, calc(-50% + 20px))`;
             textContent2.classList.remove('active');
-            
+
             if (dateBackground) {
                 dateBackground.style.opacity = 0.4 * Math.max(0, 1 - fadeOutProgress);
                 if (fadeOutProgress > 0.5) {
@@ -451,23 +540,23 @@ function updateTextTransition() {
             const fadeInProgress = Math.min(1, (scrollProgress - 0.5) / 0.5);
             textContent2.style.opacity = fadeInProgress;
             textContent2.style.transform = `translate(-50%, calc(-50% + ${(1 - fadeInProgress) * 20}px))`;
-            
+
             textContent1.style.opacity = 0;
             textContent1.style.transform = `translate(-50%, calc(-35% - 20px))`;
-            
+
             if (dateBackground) {
                 dateBackground.style.opacity = 0;
                 dateBackground.style.visibility = 'hidden';
                 dateBackground.classList.add('hidden');
             }
-            
+
             if (fadeInProgress > 0.3) {
                 textContent2.classList.add('active');
             } else {
                 textContent2.classList.remove('active');
             }
         }
-    } 
+    }
     // Phase 2: text-content-2 to quote section (scrollProgress 1-2)
     else if (scrollProgress <= 2) {
         // Hide text-content-1, bride and groom sections
@@ -484,22 +573,22 @@ function updateTextTransition() {
             section4GroomOverlay.style.visibility = 'hidden';
             section4GroomOverlay.classList.remove('active');
         }
-        
+
         const section2Progress = Math.min(1, (scrollProgress - 1) / 1);
-        
+
         if (textContent2) {
             textContent2.style.opacity = Math.max(0, 1 - section2Progress);
             if (section2Progress > 0.3) {
                 textContent2.classList.remove('active');
             }
         }
-        
+
         if (dateBackground) {
             dateBackground.style.opacity = 0;
             dateBackground.style.visibility = 'hidden';
             dateBackground.classList.add('hidden');
         }
-        
+
         if (section2QuoteOverlay) {
             section2QuoteOverlay.style.opacity = section2Progress;
             if (section2Progress > 0.1) {
@@ -531,9 +620,9 @@ function updateTextTransition() {
             section4GroomOverlay.style.visibility = 'hidden';
             section4GroomOverlay.classList.remove('active');
         }
-        
+
         const section3Progress = Math.min(1, (scrollProgress - 2) / 1);
-        
+
         // Fade out quote section
         if (section2QuoteOverlay) {
             section2QuoteOverlay.style.opacity = Math.max(0, 1 - section3Progress);
@@ -542,7 +631,7 @@ function updateTextTransition() {
                 section2QuoteOverlay.style.visibility = 'hidden';
             }
         }
-        
+
         // Fade in bride section
         if (section3BrideOverlay) {
             section3BrideOverlay.style.opacity = section3Progress;
@@ -585,9 +674,9 @@ function updateTextTransition() {
             section6ResepsiOverlay.style.visibility = 'hidden';
             section6ResepsiOverlay.classList.remove('active');
         }
-        
+
         const section4Progress = Math.min(1, (scrollProgress - 3) / 1);
-        
+
         // Fade out bride section
         if (section3BrideOverlay) {
             section3BrideOverlay.style.opacity = Math.max(0, 1 - section4Progress);
@@ -596,7 +685,7 @@ function updateTextTransition() {
                 section3BrideOverlay.style.visibility = 'hidden';
             }
         }
-        
+
         // Fade in groom section
         if (section4GroomOverlay) {
             section4GroomOverlay.style.opacity = section4Progress;
@@ -639,9 +728,9 @@ function updateTextTransition() {
             section6ResepsiOverlay.style.visibility = 'hidden';
             section6ResepsiOverlay.classList.remove('active');
         }
-        
+
         const section5Progress = Math.min(1, (scrollProgress - 4) / 1);
-        
+
         // Fade out groom section
         if (section4GroomOverlay) {
             section4GroomOverlay.style.opacity = Math.max(0, 1 - section5Progress);
@@ -650,7 +739,7 @@ function updateTextTransition() {
                 section4GroomOverlay.style.visibility = 'hidden';
             }
         }
-        
+
         // Fade in akad section
         if (section5AkadOverlay) {
             section5AkadOverlay.style.opacity = section5Progress;
@@ -698,9 +787,9 @@ function updateTextTransition() {
             section7StoryOverlay.style.visibility = 'hidden';
             section7StoryOverlay.classList.remove('active');
         }
-        
+
         const section6Progress = Math.min(1, (scrollProgress - 5) / 1);
-        
+
         // Fade out akad section
         if (section5AkadOverlay) {
             section5AkadOverlay.style.opacity = Math.max(0, 1 - section6Progress);
@@ -709,7 +798,7 @@ function updateTextTransition() {
                 section5AkadOverlay.style.visibility = 'hidden';
             }
         }
-        
+
         // Fade in resepsi section
         if (section6ResepsiOverlay) {
             section6ResepsiOverlay.style.opacity = section6Progress;
@@ -755,14 +844,14 @@ function updateTextTransition() {
             section5AkadOverlay.style.visibility = 'hidden';
             section5AkadOverlay.classList.remove('active');
         }
-        
+
         // Show story section
         if (section7StoryOverlay) {
             section7StoryOverlay.style.opacity = 1;
             section7StoryOverlay.style.visibility = 'visible';
             section7StoryOverlay.classList.add('active');
         }
-        
+
         // Fade out resepsi when entering story
         if (scrollProgress <= 7) {
             const fadeOutProgress = Math.min(1, (scrollProgress - 6) / 1);
@@ -780,10 +869,10 @@ function updateTextTransition() {
                 section6ResepsiOverlay.classList.remove('active');
             }
         }
-        
+
         // Show/hide story items based on scroll progress
         const storyItems = document.querySelectorAll('.timeline-item');
-        
+
         if (scrollProgress >= 7 && scrollProgress < 8) {
             // Story 1 visible
             if (storyItems[0]) storyItems[0].style.opacity = 1;
@@ -809,7 +898,7 @@ function updateTextTransition() {
             if (storyItems[2]) storyItems[2].style.opacity = 1;
             if (storyItems[3]) storyItems[3].style.opacity = 1;
         }
-        
+
         // Hide invitation section when in story
         if (section8InvitationOverlay) {
             section8InvitationOverlay.style.opacity = 0;
@@ -855,7 +944,7 @@ function updateTextTransition() {
             section6ResepsiOverlay.style.visibility = 'hidden';
             section6ResepsiOverlay.classList.remove('active');
         }
-        
+
         // Fade out story when entering invitation
         const fadeOutProgress = Math.min(1, (scrollProgress - 10) / 1);
         if (section7StoryOverlay) {
@@ -865,7 +954,7 @@ function updateTextTransition() {
                 section7StoryOverlay.style.visibility = 'hidden';
             }
         }
-        
+
         // Show invitation section
         if (section8InvitationOverlay) {
             section8InvitationOverlay.style.opacity = fadeOutProgress;
@@ -877,7 +966,7 @@ function updateTextTransition() {
                 section8InvitationOverlay.classList.remove('active');
             }
         }
-        
+
         // Hide gifts section
         if (section9GiftsOverlay) {
             section9GiftsOverlay.style.opacity = 0;
@@ -928,7 +1017,7 @@ function updateTextTransition() {
             section7StoryOverlay.style.visibility = 'hidden';
             section7StoryOverlay.classList.remove('active');
         }
-        
+
         // Fade out invitation when entering gifts
         const fadeOutProgress = Math.min(1, (scrollProgress - 11) / 1);
         if (section8InvitationOverlay) {
@@ -938,7 +1027,7 @@ function updateTextTransition() {
                 section8InvitationOverlay.style.visibility = 'hidden';
             }
         }
-        
+
         // Show gifts section
         if (section9GiftsOverlay) {
             section9GiftsOverlay.style.opacity = fadeOutProgress;
@@ -960,7 +1049,7 @@ document.addEventListener('touchmove', handleTouchMove, { passive: false });
 document.addEventListener('touchend', handleTouchEnd, { passive: false });
 
 // Initialize
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const textContent1 = document.querySelector('.text-content-1');
     const textContent2 = document.querySelector('.text-content-2');
     const dateBackground = document.querySelector('.date-background');
@@ -972,71 +1061,71 @@ document.addEventListener('DOMContentLoaded', function() {
     const section7StoryOverlay = document.querySelector('.section-7-story-overlay');
     const section8InvitationOverlay = document.querySelector('.section-8-invitation-overlay');
     const section9GiftsOverlay = document.querySelector('.section-9-gifts-overlay');
-    
+
     if (textContent1) {
         textContent1.style.opacity = '1';
         textContent1.style.transform = 'translate(-50%, -35%)';
     }
-    
+
     if (textContent2) {
         textContent2.style.opacity = '0';
         textContent2.style.transform = 'translate(-50%, calc(-50% + 20px))';
     }
-    
+
     // Set initial opacity for date background
     if (dateBackground) {
         dateBackground.style.opacity = '0.4';
         dateBackground.style.visibility = 'visible';
     }
-    
+
     // Hide section 2 quote overlay initially
     if (section2QuoteOverlay) {
         section2QuoteOverlay.style.opacity = '0';
         section2QuoteOverlay.style.visibility = 'hidden';
     }
-    
+
     // Hide section 3 bride overlay initially
     if (section3BrideOverlay) {
         section3BrideOverlay.style.opacity = '0';
         section3BrideOverlay.style.visibility = 'hidden';
     }
-    
+
     // Hide section 4 groom overlay initially
     if (section4GroomOverlay) {
         section4GroomOverlay.style.opacity = '0';
         section4GroomOverlay.style.visibility = 'hidden';
     }
-    
+
     // Hide section 5 akad overlay initially
     if (section5AkadOverlay) {
         section5AkadOverlay.style.opacity = '0';
         section5AkadOverlay.style.visibility = 'hidden';
     }
-    
+
     // Hide section 6 resepsi overlay initially
     if (section6ResepsiOverlay) {
         section6ResepsiOverlay.style.opacity = '0';
         section6ResepsiOverlay.style.visibility = 'hidden';
     }
-    
+
     // Hide section 7 story overlay initially
     if (section7StoryOverlay) {
         section7StoryOverlay.style.opacity = '0';
         section7StoryOverlay.style.visibility = 'hidden';
     }
-    
+
     // Hide section 8 invitation overlay initially
     if (section8InvitationOverlay) {
         section8InvitationOverlay.style.opacity = '0';
         section8InvitationOverlay.style.visibility = 'hidden';
     }
-    
+
     // Hide section 9 gifts overlay initially
     if (section9GiftsOverlay) {
         section9GiftsOverlay.style.opacity = '0';
         section9GiftsOverlay.style.visibility = 'hidden';
     }
-    
+
     // Initialize Leaflet maps with error handling
     try {
         // Map for Akad
@@ -1050,7 +1139,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .bindPopup('Kantor Kecamatan Pondok Aren')
                 .openPopup();
         }
-        
+
         // Map for Resepsi
         const mapResepsiElement = document.getElementById('map-resepsi');
         if (mapResepsiElement) {
@@ -1072,14 +1161,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
     document.body.style.height = '100%';
-    
+
     // Background music handling
     const backgroundMusic = document.getElementById('backgroundMusic');
-    
+
     if (backgroundMusic) {
         // Try to play music automatically
         const playPromise = backgroundMusic.play();
-        
+
         if (playPromise !== undefined) {
             playPromise.then(() => {
                 console.log('Music started playing automatically');
@@ -1097,13 +1186,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.removeEventListener('touchstart', playOnInteraction);
                     document.removeEventListener('wheel', playOnInteraction);
                 };
-                
+
                 document.addEventListener('click', playOnInteraction);
                 document.addEventListener('touchstart', playOnInteraction);
                 document.addEventListener('wheel', playOnInteraction);
             });
         }
-        
+
         // Reload page when music ends (if not looping)
         backgroundMusic.addEventListener('ended', () => {
             console.log('Music ended, reloading page');
