@@ -23,6 +23,8 @@ body {
     -webkit-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    touch-action: pan-y;
+    /* Allow vertical panning for better touch response */
 }
 
 /* Fullscreen mode styles */
@@ -53,6 +55,8 @@ body:fullscreen {
     position: relative;
 }
 
+
+
 .section-1 {
     background-color: #78A8D7;
 }
@@ -65,7 +69,7 @@ body:fullscreen {
     transform: translate(-50%, -50%);
     text-align: center;
     width: 100%;
-    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .text-content-1 {
@@ -520,7 +524,7 @@ body:fullscreen {
 
 /* Date background transition */
 .date-background {
-    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .date-background.fade-out {
@@ -587,7 +591,7 @@ body:fullscreen {
     z-index: 10;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: none;
     overflow: hidden;
 }
@@ -705,7 +709,7 @@ body:fullscreen {
     z-index: 11;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: none;
     overflow: hidden;
 }
@@ -802,7 +806,7 @@ body:fullscreen {
     z-index: 12;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: none;
     overflow: hidden;
 }
@@ -959,7 +963,7 @@ body:fullscreen {
     z-index: 13;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: none;
     overflow: hidden;
 }
@@ -1115,22 +1119,49 @@ body:fullscreen {
 }
 
 .event-button {
-    display: inline-block;
-    font-family: 'Playfair Display', serif;
-    color: #7e7a7a;
-    padding: 0.7em 1.7em;
+    position: relative;
     font-size: 15px !important;
-    border-radius: 0.5em;
-    background: #e8e8e8;
-    cursor: pointer;
-    border: 1px solid #e8e8e8;
-    transition: all 0.3s;
-    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+
     text-decoration: none;
+    padding: 1em 2.5em;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 6em;
+    transition: all 0.2s;
+    border: none;
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    color: rgb(150, 149, 149);
+    background-color: white;
 }
 
 .event-button:hover {
-    border: 1px solid white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.event-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.event-button::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all 0.4s;
+    background-color: #fff;
+}
+
+.event-button:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
 }
 
 .event-button:active {
@@ -1832,7 +1863,7 @@ ection 8: Invitation */
     }
 }
 
-media (min-width: 768px) {
+@media (min-width: 768px) {
     .invitation-content {
         max-width: 700px;
     }

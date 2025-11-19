@@ -237,6 +237,9 @@ const CHECKPOINTS = {
 // Track scroll gesture
 let touchStartY = 0;
 let touchCurrentY = 0;
+let touchStartTime = 0;
+let lastTouchY = 0;
+let lastTouchTime = 0;
 
 function handleWheel(e) {
     e.preventDefault();
@@ -323,22 +326,45 @@ function handleWheel(e) {
         }
     }
 
-    // Smooth transition to checkpoint
-    targetProgress = nextCheckpoint;
-    animateToTarget();
+    // Smooth transition to checkpoint (only if not already animating)
+    if (!isAnimating) {
+        targetProgress = nextCheckpoint;
+        isAnimating = true;
+        animateToTarget();
+    }
 }
 
-function animateToTarget() {
-    const diff = targetProgress - scrollProgress;
-    const step = diff * 0.15; // Smoothing factor
+// Animation variables for smooth transitions
+let animationStartTime = null;
+let animationStartProgress = 0;
+let animationTargetProgress = 0;
+let animationDuration = 600; // Fixed duration in milliseconds for consistent timing
 
-    if (Math.abs(diff) > 0.01) {
-        scrollProgress += step;
-        updateTextTransition();
+function animateToTarget() {
+    const currentTime = performance.now();
+    
+    if (animationStartTime === null) {
+        animationStartTime = currentTime;
+        animationStartProgress = scrollProgress;
+        animationTargetProgress = targetProgress;
+    }
+    
+    const elapsed = currentTime - animationStartTime;
+    const progress = Math.min(elapsed / animationDuration, 1);
+    
+    // Use easeOutCubic for smooth deceleration
+    const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+    
+    scrollProgress = animationStartProgress + (animationTargetProgress - animationStartProgress) * easeOutCubic;
+    updateTextTransition();
+    
+    if (progress < 1) {
         requestAnimationFrame(animateToTarget);
     } else {
         scrollProgress = targetProgress;
         updateTextTransition();
+        animationStartTime = null; // Reset for next animation
+        isAnimating = false; // Allow new animations
     }
 }
 
@@ -347,32 +373,49 @@ let touchStartProgress = 0;
 let isTouching = false;
 let lastTouchCheckpoint = -1; // Track last checkpoint triggered by touch
 let hasPlayedMusicOnScroll = false; // Track if music has been played on scroll
+let isAnimating = false; // Prevent multiple animations
 
 function handleTouchStart(e) {
     if (!e.touches || e.touches.length === 0) return;
 
     touchStartY = e.touches[0].clientY;
     touchStartProgress = scrollProgress;
+    touchStartTime = performance.now();
+    lastTouchY = touchStartY;
+    lastTouchTime = touchStartTime;
     isTouching = true;
     lastTouchCheckpoint = -1; // Reset checkpoint tracking
 }
 
 function handleTouchMove(e) {
-    if (!isTouching) return;
+    if (!isTouching || isAnimating) return;
 
     e.preventDefault();
 
     if (!e.touches || e.touches.length === 0) return;
 
     touchCurrentY = e.touches[0].clientY;
+    const currentTime = performance.now();
     const delta = touchStartY - touchCurrentY;
+    const touchTime = currentTime - touchStartTime;
+    
+    // Calculate velocity for more natural swipe detection
+    const timeDiff = currentTime - lastTouchTime;
+    const yDiff = touchCurrentY - lastTouchY;
+    const velocity = timeDiff > 0 ? Math.abs(yDiff / timeDiff) : 0;
+    
+    lastTouchY = touchCurrentY;
+    lastTouchTime = currentTime;
+    
     // delta > 0: finger moved up = scroll down (next checkpoint)
     // delta < 0: finger moved down = scroll up (previous checkpoint)
-    const minScrollDistance = 50; // Minimum distance to trigger checkpoint change
+    const minScrollDistance = 35; // Minimum distance to trigger checkpoint change
+    const maxTouchTime = 800; // Maximum time for a valid swipe
+    const minVelocity = 0.1; // Minimum velocity for responsive feel
 
-    // Check if we've scrolled enough to trigger checkpoint change
-    if (Math.abs(delta) < minScrollDistance) {
-        return; // Not enough movement yet
+    // Check if we've scrolled enough, within reasonable time, and with sufficient velocity
+    if (Math.abs(delta) < minScrollDistance || touchTime > maxTouchTime || velocity < minVelocity) {
+        return; // Not enough movement, too slow, or insufficient velocity
     }
 
     // Determine direction
@@ -447,9 +490,10 @@ function handleTouchMove(e) {
         }
     }
 
-    // Only trigger if checkpoint changed
-    if (nextCheckpoint !== lastTouchCheckpoint) {
+    // Only trigger if checkpoint changed and not currently animating
+    if (nextCheckpoint !== lastTouchCheckpoint && !isAnimating) {
         lastTouchCheckpoint = nextCheckpoint;
+        isAnimating = true;
         // Update touch start position to prevent multiple triggers
         touchStartY = touchCurrentY;
 
@@ -472,13 +516,18 @@ function handleTouchEnd() {
     touchStartY = 0;
     touchCurrentY = 0;
     isTouching = false;
-    // Snap to nearest checkpoint
-    const checkpoints = [CHECKPOINTS.TEXT_CONTENT_1, CHECKPOINTS.TEXT_CONTENT_2, CHECKPOINTS.QUOTE_SECTION, CHECKPOINTS.BRIDE_SECTION, CHECKPOINTS.GROOM_SECTION, CHECKPOINTS.AKAD_SECTION, CHECKPOINTS.RESEPSI_SECTION, CHECKPOINTS.STORY_1, CHECKPOINTS.STORY_2, CHECKPOINTS.STORY_3, CHECKPOINTS.STORY_4, CHECKPOINTS.INVITATION_SECTION, CHECKPOINTS.GIFTS_SECTION];
-    const nearestCheckpoint = checkpoints.reduce((prev, curr) =>
-        Math.abs(curr - scrollProgress) < Math.abs(prev - scrollProgress) ? curr : prev
-    );
-    targetProgress = nearestCheckpoint;
-    animateToTarget();
+    
+    // Only snap if not already animating
+    if (!isAnimating) {
+        // Snap to nearest checkpoint
+        const checkpoints = [CHECKPOINTS.TEXT_CONTENT_1, CHECKPOINTS.TEXT_CONTENT_2, CHECKPOINTS.QUOTE_SECTION, CHECKPOINTS.BRIDE_SECTION, CHECKPOINTS.GROOM_SECTION, CHECKPOINTS.AKAD_SECTION, CHECKPOINTS.RESEPSI_SECTION, CHECKPOINTS.STORY_1, CHECKPOINTS.STORY_2, CHECKPOINTS.STORY_3, CHECKPOINTS.STORY_4, CHECKPOINTS.INVITATION_SECTION, CHECKPOINTS.GIFTS_SECTION];
+        const nearestCheckpoint = checkpoints.reduce((prev, curr) =>
+            Math.abs(curr - scrollProgress) < Math.abs(prev - scrollProgress) ? curr : prev
+        );
+        targetProgress = nearestCheckpoint;
+        isAnimating = true;
+        animateToTarget();
+    }
 }
 
 // Update text transition based on scroll progress
