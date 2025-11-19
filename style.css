@@ -1398,7 +1398,7 @@ ction 7: Our Story */
 
 .timeline-item {
     position: relative;
-    margin-bottom: 80px;
+    margin-bottom: 40px;
     opacity: 0;
     transition: opacity 0.8s ease-in-out;
 }
@@ -1408,7 +1408,7 @@ ction 7: Our Story */
     position: absolute;
     left: 78px;
     top: 0;
-    bottom: -80px;
+    bottom: -40px;
     width: 4px;
     background: rgba(26, 74, 107, 0.1);
     z-index: 1;
@@ -1540,12 +1540,12 @@ ction 7: Our Story */
     }
 
     .timeline-item {
-        margin-bottom: 35px;
+        margin-bottom: 25px;
     }
 
     .timeline-item::before {
         left: 30px;
-        bottom: -35px;
+        bottom: -25px;
         width: 3px;
     }
 
@@ -1648,12 +1648,12 @@ ction 7: Our Story */
     }
 
     .timeline-item {
-        margin-bottom: 50px;
+        margin-bottom: 35px;
     }
 
     .timeline-item::before {
         left: 48px;
-        bottom: -50px;
+        bottom: -35px;
     }
 
     .timeline-item-left .timeline-content,
