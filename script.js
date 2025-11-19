@@ -66,24 +66,8 @@ function initMusicControl() {
         e.stopPropagation();
     });
 
-    // Try to autoplay on first user interaction (anywhere on page)
-    let hasTriedAutoplay = false;
-    function tryAutoplay(e) {
-        // Don't autoplay if user clicked the music button
-        if (e.target && (e.target.id === 'musicToggle' || e.target.closest('#musicToggle'))) {
-            return;
-        }
-        
-        if (!hasTriedAutoplay && !isPlaying) {
-            hasTriedAutoplay = true;
-            console.log('Attempting autoplay on user interaction');
-            playMusic();
-        }
-    }
-
-    // Use capture phase to ensure we get the event before other handlers
-    document.addEventListener('touchstart', tryAutoplay, { once: true, capture: true });
-    document.addEventListener('click', tryAutoplay, { once: true, capture: true });
+    // Expose playMusic function globally for scroll handler
+    window.playMusicOnScroll = playMusic;
     
     console.log('Music control initialized');
 }
@@ -176,6 +160,15 @@ function handleWheel(e) {
         Math.abs(curr - scrollProgress) < Math.abs(prev - scrollProgress) ? curr : prev
     );
     
+    // Play music on first scroll (any direction from first page)
+    if (!hasPlayedMusicOnScroll && currentCheckpoint === CHECKPOINTS.TEXT_CONTENT_1) {
+        hasPlayedMusicOnScroll = true;
+        console.log('Playing music on first scroll');
+        if (window.playMusicOnScroll) {
+            window.playMusicOnScroll();
+        }
+    }
+    
     // Determine next checkpoint based on current checkpoint and direction
     let nextCheckpoint = currentCheckpoint;
     
@@ -264,6 +257,7 @@ function animateToTarget() {
 let touchStartProgress = 0;
 let isTouching = false;
 let lastTouchCheckpoint = -1; // Track last checkpoint triggered by touch
+let hasPlayedMusicOnScroll = false; // Track if music has been played on scroll
 
 function handleTouchStart(e) {
     if (!e.touches || e.touches.length === 0) return;
@@ -369,6 +363,15 @@ function handleTouchMove(e) {
         lastTouchCheckpoint = nextCheckpoint;
         // Update touch start position to prevent multiple triggers
         touchStartY = touchCurrentY;
+        
+        // Play music on first scroll (any direction from first page)
+        if (!hasPlayedMusicOnScroll && currentCheckpoint === CHECKPOINTS.TEXT_CONTENT_1) {
+            hasPlayedMusicOnScroll = true;
+            console.log('Playing music on first swipe');
+            if (window.playMusicOnScroll) {
+                window.playMusicOnScroll();
+            }
+        }
         
         // Smooth transition to checkpoint
         targetProgress = nextCheckpoint;
