@@ -1058,7 +1058,8 @@ body:fullscreen {
     letter-spacing: 0.5px;
 }
 
-.event-location {
+.event-location,
+.event-venue {
     font-family: 'Playfair Display', serif;
     font-size: 12px;
     font-weight: 400;
@@ -1176,7 +1177,8 @@ body:fullscreen {
         font-size: 14px;
     }
 
-    .event-location {
+    .event-location,
+    .event-venue {
         font-size: 13px;
         line-height: 1.4;
     }
@@ -1225,7 +1227,8 @@ body:fullscreen {
         font-size: 20px;
     }
 
-    .event-location {
+    .event-location,
+    .event-venue {
         font-size: 18px;
         line-height: 1.6;
     }
@@ -1308,6 +1311,71 @@ ction 7: Our Story */
 
 .section-7-story-overlay.active .story-main-title {
     opacity: 1;
+}
+
+/* Flower decorations for Our Story section */
+.story-pojok-kiri-atas-1 {
+    position: fixed;
+    top: -60px;
+    left: -40px;
+    width: 150px;
+    z-index: 0;
+}
+
+.story-pojok-kiri-atas-2 {
+    position: fixed;
+    top: 30px;
+    left: -20px;
+    width: 140px;
+    z-index: 0;
+}
+
+.story-pojok-kanan-atas-1 {
+    position: fixed;
+    top: -10px;
+    right: -30px;
+    width: 150px;
+    z-index: 0;
+}
+
+.story-pojok-kanan-atas-2 {
+    position: fixed;
+    top: -30px;
+    right: -60px;
+    width: 140px;
+    z-index: 0;
+}
+
+.story-bawah-kiri {
+    position: fixed;
+    bottom: -120px;
+    left: 10%;
+    width: 150px;
+    z-index: 0;
+}
+
+.story-bawah-kanan {
+    position: fixed;
+    bottom: -120px;
+    right: 10%;
+    width: 150px;
+    z-index: 0;
+}
+
+.story-pojok-kiri-bawah {
+    position: fixed;
+    bottom: -30px;
+    left: -30px;
+    width: 150px;
+    z-index: 0;
+}
+
+.story-pojok-kanan-bawah {
+    position: fixed;
+    bottom: -30px;
+    right: -30px;
+    width: 150px;
+    z-index: 0;
 }
 
 .timeline {
@@ -1393,9 +1461,9 @@ ction 7: Our Story */
     height: 140px;
     border-radius: 50%;
     overflow: hidden;
-    border: 5px solid #ffffff;
+    border: 5px solid #78A8D7;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    background: rgba(255, 255, 255, 0.9);
+    background: #78A8D7;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1517,6 +1585,48 @@ ction 7: Our Story */
         font-size: 12px;
         line-height: 1.45;
     }
+
+    .story-pojok-kiri-atas-1 {
+        width: 120px;
+        top: -20px;
+        left: -20px;
+    }
+
+    .story-pojok-kiri-atas-2 {
+        width: 110px;
+        top: -15px;
+        left: -15px;
+    }
+
+    .story-pojok-kanan-atas-1 {
+        width: 120px;
+        top: -20px;
+        right: -20px;
+    }
+
+    .story-pojok-kanan-atas-2 {
+        width: 110px;
+        top: -15px;
+        right: -15px;
+    }
+
+    .story-bawah-kiri,
+    .story-bawah-kanan {
+        width: 120px;
+        bottom: -20px;
+    }
+
+    .story-pojok-kiri-bawah {
+        width: 120px;
+        bottom: -20px;
+        left: -20px;
+    }
+
+    .story-pojok-kanan-bawah {
+        width: 120px;
+        bottom: -20px;
+        right: -20px;
+    }
 }
 
 @media (min-width: 401px) and (max-width: 768px) {
@@ -1577,6 +1687,26 @@ ction 7: Our Story */
     .timeline-description {
         font-size: 14px;
         line-height: 1.6;
+    }
+
+    .story-pojok-kiri-atas-1,
+    .story-pojok-kanan-atas-1 {
+        width: 140px;
+    }
+
+    .story-pojok-kiri-atas-2,
+    .story-pojok-kanan-atas-2 {
+        width: 130px;
+    }
+
+    .story-bawah-kiri,
+    .story-bawah-kanan {
+        width: 140px;
+    }
+
+    .story-pojok-kiri-bawah,
+    .story-pojok-kanan-bawah {
+        width: 140px;
     }
 }
 

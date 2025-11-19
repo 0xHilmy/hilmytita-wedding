@@ -1,3 +1,100 @@
+// Music Control
+let musicToggle, backgroundMusic, playIcon, pauseIcon;
+let isPlaying = false;
+let musicInitialized = false;
+
+function initMusicControl() {
+    if (musicInitialized) return;
+    
+    musicToggle = document.getElementById('musicToggle');
+    backgroundMusic = document.getElementById('backgroundMusic');
+    playIcon = document.querySelector('.play-icon');
+    pauseIcon = document.querySelector('.pause-icon');
+    
+    if (!musicToggle || !backgroundMusic || !playIcon || !pauseIcon) {
+        console.log('Music elements not found, retrying...');
+        setTimeout(initMusicControl, 100);
+        return;
+    }
+    
+    musicInitialized = true;
+
+    // Function to play music
+    function playMusic() {
+        const playPromise = backgroundMusic.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                console.log('Music playing');
+            }).catch(err => {
+                console.log('Error playing music:', err);
+                isPlaying = false;
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            });
+        }
+    }
+
+    // Function to pause music
+    function pauseMusic() {
+        backgroundMusic.pause();
+        isPlaying = false;
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        console.log('Music paused');
+    }
+
+    // Toggle music on button click
+    musicToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Music button clicked, isPlaying:', isPlaying);
+        
+        if (isPlaying) {
+            pauseMusic();
+        } else {
+            playMusic();
+        }
+    });
+    
+    // Also handle touch events separately for mobile
+    musicToggle.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    // Try to autoplay on first user interaction (anywhere on page)
+    let hasTriedAutoplay = false;
+    function tryAutoplay(e) {
+        // Don't autoplay if user clicked the music button
+        if (e.target && (e.target.id === 'musicToggle' || e.target.closest('#musicToggle'))) {
+            return;
+        }
+        
+        if (!hasTriedAutoplay && !isPlaying) {
+            hasTriedAutoplay = true;
+            console.log('Attempting autoplay on user interaction');
+            playMusic();
+        }
+    }
+
+    // Use capture phase to ensure we get the event before other handlers
+    document.addEventListener('touchstart', tryAutoplay, { once: true, capture: true });
+    document.addEventListener('click', tryAutoplay, { once: true, capture: true });
+    
+    console.log('Music control initialized');
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMusicControl);
+} else {
+    initMusicControl();
+}
+
 // Auto-hide address bar and navigation buttons on mobile
 window.addEventListener('load', function() {
     // Scroll to hide address bar

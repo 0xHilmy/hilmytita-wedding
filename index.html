@@ -21,10 +21,20 @@
 
 <body>
     <!-- Background Music -->
-    <audio id="backgroundMusic" autoplay loop>
+    <audio id="backgroundMusic" loop>
         <source src="Sesaat Kau Hadir - Utha Likumahuwa ( cover by TAF Entertainment ).mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+
+    <!-- Music Control Button -->
+    <button id="musicToggle" class="music-toggle" aria-label="Toggle Music">
+        <svg class="music-icon play-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z" />
+        </svg>
+        <svg class="music-icon pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+        </svg>
+    </button>
 
     <!-- Section 1: Main Page -->
     <section class="section section-1">
@@ -194,6 +204,7 @@
                 <p class="event-date">Minggu, 30 November 2025</p>
                 <p class="event-time">10.00 WIB - 17.00 WIB</p>
                 <p class="event-location">Jl. Sdn Cipadu I No.12</p>
+                <p class="event-venue">Kediaman Mempelai Wanita</p>
             </div>
         </div>
 
@@ -277,75 +288,105 @@
         <div class="story-container">
             <h2 class="story-main-title">Our Story</h2>
 
-            <div class="timeline">
-                <!-- Timeline Line -->
-                <div class="timeline-line"></div>
+            <!-- Flower decorations -->
+            <div class="flower story-pojok-kiri-atas-1">
+                <img src="assets/pojok kiri atas 1.png" alt="Flower decoration">
+            </div>
+            <div class="flower story-pojok-kiri-atas-2">
+                <img src="assets/pojok kiri atas 2.png" alt="Flower decoration">
+            </div>
+            <div class="flower story-pojok-kanan-atas-1">
+                <img src="assets/pojok kanan atas 1.png" alt="Flower decoration">
+            </div>
+            <div class="flower story-pojok-kanan-atas-2">
+                <img src="assets/pojok kanan atas 2.png" alt="Flower decoration">
+            </div>
+            <div class="flower story-bawah-kiri">
+                <img src="assets/bawah kiri .png" alt="Flower decoration">
+            </div>
+            <div class="flower story-bawah-kanan">
+                <img src="assets/bawah kanan.png" alt="Flower decoration">
+            </div>
+            <div class="flower story-pojok-kiri-bawah">
+                <img src="assets/pojok kiri bawah.png" alt="Flower decoration">
+            </div>
+            <div class="flower story-pojok-kanan-bawah">
+                <img src="assets/pojok kanan bawah.png" alt="Flower decoration">
+            </div>
 
-                <!-- Story 1: First Meeting -->
-                <div class="timeline-item timeline-item-left">
-                    <div class="timeline-content">
-                        <div class="timeline-image">
-                            <div class="timeline-placeholder">2014</div>
-                        </div>
-                        <div class="timeline-text">
-                            <h3 class="timeline-title">First Meeting</h3>
-                            <p class="timeline-year">2014</p>
-                            <p class="timeline-description">Pertemuan Pertama Kami pada bangku Sekolah Menengah Pertama
-                                di SMAN 108 Jakarta</p>
-                        </div>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
+            <div class="timeline"></div>
+            <!-- Timeline Line -->
+            <div class="timeline-line"></div>
 
-                <!-- Story 2: Perpisahan -->
-                <div class="timeline-item timeline-item-right">
-                    <div class="timeline-content">
-                        <div class="timeline-text">
-                            <h3 class="timeline-title">Perpisahan</h3>
-                            <p class="timeline-year">2017</p>
-                            <p class="timeline-description">Kami harus berpisah untuk melanjutkan studi di perguruan
-                                tinggi, Hilmy di UNY Jogja dan Tita di Poltekkes Kemenkes II Jakarta</p>
-                        </div>
-                        <div class="timeline-image">
-                            <div class="timeline-placeholder">2017</div>
-                        </div>
+            <!-- Story 1: First Meeting -->
+            <div class="timeline-item timeline-item-left">
+                <div class="timeline-content">
+                    <div class="timeline-image">
+                        <img src="assets/SMAN108.jpg" alt="SMAN 108 Jakarta">
                     </div>
-                    <div class="timeline-dot"></div>
+                    <div class="timeline-text">
+                        <h3 class="timeline-title">Pertemuan Pertama</h3>
+                        <p class="timeline-year">2014</p>
+                        <p class="timeline-description">Pertemuan Pertama Kami pada bangku Sekolah Menengah Atas
+                            di SMAN 108 Jakarta</p>
+                    </div>
                 </div>
+                <div class="timeline-dot"></div>
+            </div>
 
-                <!-- Story 3: Pertemuan Kembali -->
-                <div class="timeline-item timeline-item-left">
-                    <div class="timeline-content">
-                        <div class="timeline-image">
-                            <div class="timeline-placeholder">2023</div>
-                        </div>
-                        <div class="timeline-text">
-                            <h3 class="timeline-title">Pertemuan Kembali</h3>
-                            <p class="timeline-year">2023</p>
-                            <p class="timeline-description">Berawal dari komentar Tita di salah satu postingan Instagram
-                                Hilmy, Akhirnya kita Bertemu Kembali dan mulai dekat lagi</p>
-                        </div>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
+            <!-- Story 2: Perpisahan -->
+            <div class="timeline-item timeline-item-right">
+                <div class="timeline-content">
 
-                <!-- Story 4: Pernikahan -->
-                <div class="timeline-item timeline-item-right">
-                    <div class="timeline-content">
-                        <div class="timeline-text">
-                            <h3 class="timeline-title">Pernikahan</h3>
-                            <p class="timeline-year">2025</p>
-                            <p class="timeline-description">Setelah Perjalanan Panjang, Kisah Cinta Kami bermuara pada
-                                jenjang pernikahan</p>
-                        </div>
-                        <div class="timeline-image">
-                            <div class="timeline-placeholder">2025</div>
-                        </div>
+                    <div class="timeline-text">
+                        <h3 class="timeline-title">Perpisahan</h3>
+                        <p class="timeline-year">2017</p>
+                        <p class="timeline-description">Kami harus berpisah untuk melanjutkan studi di perguruan
+                            tinggi, Hilmy di UNY Jogja dan Tita di Poltekkes Kemenkes II Jakarta</p>
                     </div>
-                    <div class="timeline-dot"></div>
+                    <div class="timeline-image">
+                        <img src="assets/Perpisahan.png" alt="Perpisahan 2017">
+                    </div>
                 </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <!-- Story 3: Pertemuan Kembali -->
+            <div class="timeline-item timeline-item-left">
+                <div class="timeline-content">
+                    <div class="timeline-image">
+                        <div class="timeline-placeholder">2023</div>
+                    </div>
+                    <div class="timeline-text">
+                        <h3 class="timeline-title">Pertemuan Kembali</h3>
+                        <p class="timeline-year">2023</p>
+                        <p class="timeline-description">Berawal dari komentar Tita di salah satu postingan Instagram
+                            Hilmy, Akhirnya kita Bertemu Kembali dan mulai dekat lagi. Taman Literasi Blok M adalah saksi bisu pertemuan kami</p>
+                    </div>
+                       <div class="timeline-image">
+                        <img src="assets/taman literasi.jpeg" alt="taman literasi">
+                    </div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+
+            <!-- Story 4: Pernikahan -->
+            <div class="timeline-item timeline-item-right">
+                <div class="timeline-content">
+                    <div class="timeline-text">
+                        <h3 class="timeline-title">Pernikahan</h3>
+                        <p class="timeline-year">2025</p>
+                        <p class="timeline-description">Setelah Perjalanan Panjang, Kisah Cinta Kami bermuara pada
+                            jenjang pernikahan</p>
+                    </div>
+                    <div class="timeline-image">
+                        <img src="assets/pernikahan.png" alt="pernikahan">
+                    </div>
+                </div>
+                <div class="timeline-dot"></div>
             </div>
         </div>
+    </div>
     </div>
 
     <script src="script.js"></script>
